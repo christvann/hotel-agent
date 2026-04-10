@@ -117,7 +117,7 @@ onMounted(async () => {
     </div>
 
     <div class="mt-20 text-center border-t border-white/5 pt-10 pb-10">
-      <p class="text-gray-600 text-[10px] font-mono tracking-widest uppercase">POWERED BY GEMINI & OPENAI GPT-4O</p>
+      <p class="text-gray-600 text-[10px] font-mono tracking-widest uppercase">CREATED BY CHRIST</p>
     </div>
 
     <div class="fixed bottom-6 right-6 z-50">

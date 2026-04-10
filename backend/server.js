@@ -89,22 +89,28 @@ app.post("/api/chat", async (req, res) => {
 
 // --- LOGIKA OTOMATISASI ---
 const runAiAgentTask = async () => {
-  console.log("\n🤖 AI Agent memulai tugas otomatis (Scrape + Generate + Share)...");
+  console.log("\n🤖 AI Agent memulai tugas otomatis...");
   try {
     const hotels = await scrapeHotels();
     if (!hotels || hotels.length === 0) return;
 
     const results = await Promise.all(
       hotels.map(async (hotel) => {
-        const content = await generateContent(hotel);
+        let content;
+        try {
+          content = await generateContent(hotel);
+        } catch (err) {
+          // JIKA OPENAI ERROR, MENGGUNAKAN TEKS CADANGAN
+          content = `Nikmati pengalaman menginap tak terlupakan di ${hotel.name}. Dengan rating ${hotel.rating}/10, hotel ini adalah pilihan tepat di Mumbai!`;
+          console.log("⚠️ OpenAI Error, menggunakan teks cadangan.");
+        }
         return { ...hotel, content, publishedAt: new Date().toISOString() };
       })
     );
 
     fs.writeFileSync(DATA_FILE, JSON.stringify(results, null, 2));
-    console.log("✅ Data berhasil disimpan di database lokal.");
 
-    // Ambil 1 hotel secara acak untuk dipublish ke sosmed
+    // Ambil 1 hotel secara acak dan share
     const randomHotel = results[Math.floor(Math.random() * results.length)];
     await shareToSocialMedia(randomHotel);
   } catch (err) {

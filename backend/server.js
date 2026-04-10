@@ -18,19 +18,24 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 // --- FUNGSI SHARE KE SOSIAL MEDIA ---
 const shareToSocialMedia = async (hotel) => {
   try {
-    const message = `🌟 *AI HOTEL DISCOVERY: ${hotel.name}* 🌟\n\n📍 Lokasi: Mumbai\n💰 Harga: ${hotel.price}\n⭐ Rating: ${hotel.rating}/10\n\n📝 " ${hotel.content} "\n\n🔗 Lihat selengkapnya di: ${process.env.FRONTEND_URL}`;
+    // 1. Ambil link Vercel Anda (Ganti dengan link asli Anda jika variabel environment tidak terbaca)
+    const frontendLink = process.env.FRONTEND_URL || "https://hotel-agent-pi.vercel.app";
 
-    // 1. Share ke Telegram
+    const caption = `🌟 *AI HOTEL DISCOVERY: ${hotel.name}* 🌟\n\n📍 Lokasi: Mumbai\n💰 Harga: ${hotel.price}\n⭐ Rating: ${hotel.rating}/10\n\n📝 " ${hotel.content} "\n\n🔗 Lihat selengkapnya di: ${frontendLink}`;
+
+    // 2. Share ke Telegram (Dengan Gambar)
     if (process.env.TELEGRAM_TOKEN && process.env.TELEGRAM_CHAT_ID) {
-      await axios.post(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
+      const telegramUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendPhoto`;
+      await axios.post(telegramUrl, {
         chat_id: process.env.TELEGRAM_CHAT_ID,
-        text: message,
+        photo: hotel.image || "https://images.unsplash.com/photo-1566073771259-6a8506099945", // Gambar default jika kosong
+        caption: caption,
         parse_mode: "Markdown",
       });
-      console.log("📤 Berhasil share ke Telegram.");
+      console.log("📤 Berhasil share ke Telegram dengan gambar.");
     }
 
-    // 2. Share ke Discord
+    // 3. Share ke Discord (Sudah include gambar di Embed)
     if (process.env.DISCORD_WEBHOOK_URL) {
       await axios.post(process.env.DISCORD_WEBHOOK_URL, {
         content: "📢 **New AI Hotel Content Published!**",
@@ -42,9 +47,10 @@ const shareToSocialMedia = async (hotel) => {
             fields: [
               { name: "Price", value: hotel.price, inline: true },
               { name: "Rating", value: hotel.rating.toString(), inline: true },
+              { name: "Link", value: frontendLink },
             ],
             image: { url: hotel.image || "" },
-            url: process.env.FRONTEND_URL,
+            url: frontendLink,
           },
         ],
       });

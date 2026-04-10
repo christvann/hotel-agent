@@ -83,7 +83,7 @@ app.post("/api/chat", async (req, res) => {
       const best = [...hotels].sort((a, b) => b.rating - a.rating)[0];
       return res.json({ reply: `Rekomendasi juara saya adalah ${best.name} dengan rating ${best.rating}/10.` });
     }
-    if (msg.includes("halo") || msg.includes("hi")) {
+    if (msg.includes("halo") || msg.includes("hi") || msg.includes("hai")) {
       return res.json({ reply: "Halo! Saya asisten AI Hotel Explorer. Cari hotel murah atau rating tinggi?" });
     }
 

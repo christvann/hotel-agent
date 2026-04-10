@@ -1,0 +1,18 @@
+# Dependency Directories (Memblokir semua node_modules di semua folder)
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+
+# Environment files (Sangat penting agar API Key tidak bocor ke publik)
+.env
+**/.env
+
+# Editor & OS files
+.vscode/
+.idea/
+.DS_Store
+*.log

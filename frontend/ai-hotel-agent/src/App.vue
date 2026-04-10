@@ -24,7 +24,7 @@ const sendMessage = async () => {
   chatInput.value = "";
 
   try {
-    const res = await fetch("http://localhost:3005/api/chat", {
+    const res = await fetch("https://hotel-agent-production-334a.up.railway.app/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: userMsg }),
@@ -39,7 +39,7 @@ const sendMessage = async () => {
 
 onMounted(async () => {
   try {
-    const res = await fetch("http://localhost:3005/api/hotels");
+    const res = await fetch("https://hotel-agent-production-334a.up.railway.app/api/hotels");
     if (!res.ok) throw new Error("Gagal mengambil data dari server");
     const data = await res.json();
     hotels.value = data;

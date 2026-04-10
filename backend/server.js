@@ -130,7 +130,7 @@ app.get("/api/hotels", (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3005;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 3005; // Railway akan mengisi process.env.PORT secara otomatis
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🌐 Server jalan di port ${PORT}`);
 });

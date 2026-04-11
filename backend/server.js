@@ -75,15 +75,15 @@ app.post("/api/chat", async (req, res) => {
     if (msg.includes("dimana") || msg.includes("lokasi")) {
       return res.json({ reply: "Semua hotel berlokasi di Mumbai, India." });
     }
-    if (msg.includes("murah") || msg.includes("hemat")) {
+    if (msg.includes("murah") || msg.includes("hemat") || msg.includes("termurah") || msg.includes("terhemat")) {
       const cheap = [...hotels].sort((a, b) => parseInt(a.price.replace(/\D/g, "")) - parseInt(b.price.replace(/\D/g, "")))[0];
       return res.json({ reply: `Paling hemat kantong itu ${cheap.name}. Harganya cuma ${cheap.price} per malam!` });
     }
-    if (msg.includes("bagus") || msg.includes("rekomendasi")) {
+    if (msg.includes("bagus") || msg.includes("rekomendasi") || msg.includes("terbagus") || msg.includes("termantap") || msg.includes("mantap")) {
       const best = [...hotels].sort((a, b) => b.rating - a.rating)[0];
       return res.json({ reply: `Rekomendasi juara saya adalah ${best.name} dengan rating ${best.rating}/10.` });
     }
-    if (msg.includes("halo") || msg.includes("hi") || msg.includes("hai")) {
+    if (msg.includes("halo") || msg.includes("hallo") || msg.includes("hi") || msg.includes("hai") || msg.includes("selamat pagi") || msg.includes("pagi") || msg.includes("selamat siang") || msg.includes("siang")) {
       return res.json({ reply: "Halo! Saya asisten AI Hotel Explorer. Cari hotel murah atau rating tinggi?" });
     }
 

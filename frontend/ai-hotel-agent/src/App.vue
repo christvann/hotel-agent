@@ -123,38 +123,76 @@ onMounted(async () => {
       <p class="text-gray-600 text-[10px] font-mono tracking-widest uppercase">CREATED BY CHRIST</p>
     </div>
 
-    <div class="fixed bottom-6 right-6 z-50">
-      <button @click="chatOpen = !chatOpen" class="bg-gradient-to-br from-purple-600 to-pink-600 hover:scale-110 active:scale-90 p-4 rounded-full shadow-2xl transition-all duration-300 text-xl">
-        <span v-if="!chatOpen">💬</span>
-        <span v-else>✕</span>
-      </button>
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+      <transition name="fade-slide">
+        <div
+          v-if="chatOpen"
+          class="mb-4 w-[340px] md:w-[380px] h-[500px] bg-black/60 backdrop-blur-2xl border border-cyan-500/20 rounded-[2rem] shadow-[0_0_50px_rgba(6,182,212,0.15)] flex flex-col overflow-hidden transform origin-bottom-right"
+        >
+          <div class="bg-gradient-to-r from-purple-900/40 to-cyan-900/40 p-4 border-b border-cyan-500/20 flex items-center justify-between relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
 
-      <transition name="fade">
-        <div v-if="chatOpen" class="absolute bottom-20 right-0 w-80 h-[450px] bg-gray-900/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
-          <div class="bg-white/5 p-4 border-b border-white/10 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span class="text-xs font-bold uppercase tracking-widest text-purple-400">AI Assistant</span>
+            <div class="flex items-center gap-3 relative z-10">
+              <div class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)]"></span>
+              </div>
+              <div>
+                <h3 class="text-sm font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 drop-shadow-md">Nexus AI</h3>
+                <p class="text-[9px] text-cyan-500/80 tracking-[0.2em] font-mono">SYSTEM ONLINE</p>
+              </div>
             </div>
           </div>
 
-          <div class="flex-grow p-4 overflow-y-auto flex flex-col gap-3 custom-scrollbar">
-            <div
-              v-for="(msg, idx) in chatMessages"
-              :key="idx"
-              :class="msg.role === 'user' ? 'self-end bg-purple-600 text-white' : 'self-start bg-white/10 text-gray-200'"
-              class="max-w-[85%] p-3 rounded-2xl text-[13px] leading-relaxed shadow-sm whitespace-pre-wrap break-words"
-            >
-              {{ msg.text }}
+          <div class="flex-grow p-4 overflow-y-auto flex flex-col gap-4 custom-scrollbar bg-gradient-to-b from-transparent to-purple-900/10">
+            <div v-for="(msg, idx) in chatMessages" :key="idx" :class="msg.role === 'user' ? 'self-end' : 'self-start'" class="max-w-[85%] animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div
+                :class="
+                  msg.role === 'user'
+                    ? 'bg-gradient-to-br from-purple-600 to-cyan-600 text-white shadow-[0_5px_15px_rgba(168,85,247,0.25)] rounded-2xl rounded-tr-sm'
+                    : 'bg-white/5 backdrop-blur-md border border-cyan-500/20 text-gray-100 shadow-[0_5px_15px_rgba(0,0,0,0.3)] rounded-2xl rounded-tl-sm'
+                "
+                class="p-3.5 text-[13px] leading-relaxed whitespace-pre-wrap break-words relative overflow-hidden group"
+              >
+                <div v-if="msg.role === 'bot'" class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {{ msg.text }}
+              </div>
             </div>
           </div>
 
-          <div class="p-4 bg-white/5 border-t border-white/10 flex gap-2">
-            <input v-model="chatInput" @keyup.enter="sendMessage" placeholder="Tanya soal hotel..." class="bg-black/20 border border-white/10 rounded-xl flex-grow px-4 py-2 text-xs outline-none focus:border-purple-500 transition-colors" />
-            <button @click="sendMessage" class="bg-purple-600 p-2 px-4 rounded-xl text-xs font-bold hover:bg-purple-500 transition-colors">Kirim</button>
+          <div class="p-4 bg-black/40 border-t border-cyan-500/20 backdrop-blur-xl relative">
+            <div class="relative flex items-center group">
+              <input
+                v-model="chatInput"
+                @keyup.enter="sendMessage"
+                placeholder="Initialize command..."
+                class="w-full bg-white/5 border border-white/10 rounded-full pl-5 pr-12 py-3 text-xs text-gray-200 outline-none focus:border-cyan-500/60 focus:bg-white/10 focus:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all duration-300 placeholder-gray-500 font-mono"
+              />
+              <button
+                @click="sendMessage"
+                class="absolute right-2 w-8 h-8 flex items-center justify-center bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full text-white hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] transition-all duration-300 hover:scale-105 active:scale-95"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5">
+                  <path d="M3.478 2.404a.75.75 0 00-.926.941l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.404z" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </transition>
+
+      <button
+        @click="chatOpen = !chatOpen"
+        :class="
+          chatOpen
+            ? 'bg-transparent border-2 border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-white shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:shadow-[0_0_25px_rgba(244,63,94,0.6)] rotate-90 hover:rotate-180'
+            : 'bg-gradient-to-br from-purple-600 to-cyan-500 text-white shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.7)] hover:scale-110'
+        "
+        class="w-14 h-14 rounded-full transition-all duration-500 flex items-center justify-center text-xl relative z-50 active:scale-95 overflow-hidden"
+      >
+        <span v-if="!chatOpen" class="drop-shadow-lg text-2xl">🤖</span>
+        <span v-else class="font-black text-2xl leading-none">✕</span>
+      </button>
     </div>
   </div>
 </template>
@@ -196,5 +234,17 @@ html {
 .fade-leave-to {
   opacity: 0;
   transform: translateY(20px);
+}
+/* Animation Fade & Slide for Futuristic Vibe */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition:
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
 }
 </style>

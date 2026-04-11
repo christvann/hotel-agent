@@ -75,7 +75,7 @@ app.post("/api/chat", async (req, res) => {
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       const prompt = `Anda adalah asisten AI Christ Vann. Jawab pertanyaan user: "${message}" berdasarkan data hotel Mumbai ini: ${JSON.stringify(hotels)}. 
       ATURAN PENTING:
-      1. Jawab dengan singkat, padat, dan ramah (maksimal 3 kalimat).
+      1. Jawab dengan singkat, padat, dan ramah (maksimal 5 kalimat).
       2. Gunakan emoji secukupnya.
       3. DILARANG menggunakan format link Markdown seperti [Teks](URL). Jika harus mengirim link, ketikkan saja URL aslinya.
       4. Jika ditanya harga termurah, urutkan dari yang termurah.`;
@@ -84,26 +84,32 @@ app.post("/api/chat", async (req, res) => {
       const response = await result.response;
       return res.json({ reply: response.text() });
     } catch (aiError) {
-      console.log("⚠️ Chatbot: Gemini Error/Limit, Menggunakan Manual Keyword...");
+      console.log("⚠️ Chatbot: Gemini Limit/Error, Menggunakan Manual Keyword...");
 
       // LAYER 2: Manual Keyword (Logika Internal)
+      if (msg.includes("bingung") || msg.includes("bantu") || msg.includes("tolong") || msg.includes("cari")) {
+        return res.json({ reply: "Jangan bingung! Coba ketik 'murah' untuk melihat hotel paling hemat, atau 'terbaik' untuk hotel bintang lima. Saya siap bantu! 🏨" });
+      }
+      if (msg.includes("iya") || msg.includes("boleh") || msg.includes("mau") || msg.includes("oke") || msg.includes("sip")) {
+        return res.json({ reply: "Asyik! Yuk mulai. Kamu lebih suka cari hotel yang 'paling murah' atau yang 'ratingnya bagus'?" });
+      }
       if (msg.includes("dimana") || msg.includes("lokasi")) {
-        return res.json({ reply: "Semua hotel yang saya pantau berlokasi di Mumbai, India." });
+        return res.json({ reply: "Semua hotel rekomendasi saya saat ini berada di jantung kota Mumbai, India. 🇮🇳" });
       }
       if (msg.includes("murah") || msg.includes("hemat") || msg.includes("budget")) {
         const cheap = [...hotels].sort((a, b) => parseInt(a.price.replace(/\D/g, "")) - parseInt(b.price.replace(/\D/g, "")))[0];
-        return res.json({ reply: `Paling hemat kantong itu ${cheap.name}. Harganya cuma ${cheap.price} per malam!` });
+        return res.json({ reply: `Untuk budget super hemat, ${cheap.name} adalah jawabannya. Harganya cuma ${cheap.price} per malam!` });
       }
       if (msg.includes("bagus") || msg.includes("rekomendasi") || msg.includes("terbaik")) {
         const best = [...hotels].sort((a, b) => b.rating - a.rating)[0];
-        return res.json({ reply: `Rekomendasi juara saya adalah ${best.name} dengan rating ${best.rating}/10.` });
+        return res.json({ reply: `Pilihan sultan jatuh kepada ${best.name}! Ratingnya tembus ${best.rating}/10 lho.` });
       }
-      if (msg.includes("halo") || msg.includes("hai") || msg.includes("pagi")) {
-        return res.json({ reply: "Halo! Saya Christ Vann AI. Mau cari hotel murah atau rating tertinggi di Mumbai?" });
+      if (msg.includes("halo") || msg.includes("hai") || msg.includes("pagi") || msg.includes("siang") || msg.includes("malam")) {
+        return res.json({ reply: "Halo! Saya Christ Vann AI. Sedang butuh rekomendasi hotel di Mumbai?" });
       }
 
-      // LAYER 3: Fallback (Jika keyword tidak cocok)
-      return res.json({ reply: "Saya bisa bantu carikan hotel termurah atau rekomendasi terbaik di Mumbai. Mau coba?" });
+      // LAYER 3: Fallback Paling Bawah
+      return res.json({ reply: "Maaf, koneksi otak AI saya sedang agak penuh. Tapi tenang, ketik saja 'murah' atau 'bagus' dan saya akan langsung carikan hotelnya untukmu!" });
     }
   } catch (err) {
     res.json({ reply: "Maaf, sistem sedang sinkronisasi data. Tanya lagi sebentar lagi ya!" });

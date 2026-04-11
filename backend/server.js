@@ -73,9 +73,12 @@ app.post("/api/chat", async (req, res) => {
       if (!process.env.GEMINI_API_KEY) throw new Error("No Gemini Key");
 
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-      const prompt = `Anda adalah Christ Vann AI Assistant. Gunakan data hotel Mumbai ini: ${JSON.stringify(hotels)}. 
-      Jawab pertanyaan user secara ramah dan manusiawi: "${message}". 
-      Jika bertanya hotel termurah, urutkan dari harga terendah. Jika bertanya terbaik, cari rating tertinggi.`;
+      const prompt = `Anda adalah asisten AI Christ Vann. Jawab pertanyaan user: "${message}" berdasarkan data hotel Mumbai ini: ${JSON.stringify(hotels)}. 
+      ATURAN PENTING:
+      1. Jawab dengan singkat, padat, dan ramah (maksimal 3 kalimat).
+      2. Gunakan emoji secukupnya.
+      3. DILARANG menggunakan format link Markdown seperti [Teks](URL). Jika harus mengirim link, ketikkan saja URL aslinya.
+      4. Jika ditanya harga termurah, urutkan dari yang termurah.`;
 
       const result = await model.generateContent(prompt);
       const response = await result.response;

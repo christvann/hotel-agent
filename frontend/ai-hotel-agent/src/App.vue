@@ -143,7 +143,7 @@ onMounted(async () => {
               v-for="(msg, idx) in chatMessages"
               :key="idx"
               :class="msg.role === 'user' ? 'self-end bg-purple-600 text-white' : 'self-start bg-white/10 text-gray-200'"
-              class="max-w-[85%] p-3 rounded-2xl text-[13px] leading-relaxed shadow-sm"
+              class="max-w-[85%] p-3 rounded-2xl text-[13px] leading-relaxed shadow-sm whitespace-pre-wrap break-words"
             >
               {{ msg.text }}
             </div>

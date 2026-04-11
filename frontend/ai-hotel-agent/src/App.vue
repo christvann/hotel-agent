@@ -6,8 +6,12 @@ const loading = ref(true);
 
 // Share Button
 const shareToSocial = (hotel) => {
-  const text = `Cek hotel keren ini: ${hotel.name}! \nHarga: ${hotel.price}\n\n${hotel.content}`;
+  const frontendLink = "https://hotel-agent-pi.vercel.app";
+  const imageUrl = hotel.image || "https://images.unsplash.com/photo-1566073771259-6a8506099945";
+  const text = `*Cek hotel keren ini: ${hotel.name}!*\n\n---\n> Lokasi: Mumbai\n> Harga: ${hotel.price}\n\n"${hotel.content}"\n---\n\n*Lihat Gambar Hotel:*\n${imageUrl}\n\n*Lihat selengkapnya di web kami:*\n${frontendLink}`;
+  // Encode teks agar aman dijadikan link URL
   const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  // Buka WhatsApp di tab baru
   window.open(url, "_blank");
 };
 
@@ -35,7 +39,6 @@ const sendMessage = async () => {
     chatMessages.value.push({ role: "bot", text: "Maaf, saya gagal terhubung ke server backend." });
   }
 };
-// ---------------------
 
 onMounted(async () => {
   try {
@@ -185,7 +188,9 @@ html {
 /* Animation Fade */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 .fade-enter-from,
 .fade-leave-to {

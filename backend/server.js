@@ -18,7 +18,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 // --- FUNGSI SHARE KE SOSIAL MEDIA ---
 const shareToSocialMedia = async (hotel) => {
   try {
-    // 1. Ambil link Vercel Anda (Ganti dengan link asli Anda jika variabel environment tidak terbaca)
+    // 1. Ambil link Vercel (Ganti dengan link asli jika variabel environment tidak terbaca)
     const frontendLink = process.env.FRONTEND_URL || "https://hotel-agent-pi.vercel.app";
 
     const caption = `🌟 *AI HOTEL DISCOVERY: ${hotel.name}* 🌟\n\n📍 Lokasi: Mumbai\n💰 Harga: ${hotel.price}\n⭐ Rating: ${hotel.rating}/10\n\n📝 " ${hotel.content} "\n\n🔗 Lihat selengkapnya di: ${frontendLink}`;
@@ -35,7 +35,7 @@ const shareToSocialMedia = async (hotel) => {
       console.log("📤 Berhasil share ke Telegram dengan gambar.");
     }
 
-    // 3. Share ke Discord (Sudah include gambar di Embed)
+    // 3. Share ke Discord (Sudah include gambar)
     if (process.env.DISCORD_WEBHOOK_URL) {
       await axios.post(process.env.DISCORD_WEBHOOK_URL, {
         content: "📢 **New AI Hotel Content Published!**",
@@ -111,7 +111,7 @@ const runAiAgentTask = async () => {
           console.log("⚠️ OpenAI Error, menggunakan teks cadangan.");
         }
         return { ...hotel, content, publishedAt: new Date().toISOString() };
-      })
+      }),
     );
 
     fs.writeFileSync(DATA_FILE, JSON.stringify(results, null, 2));

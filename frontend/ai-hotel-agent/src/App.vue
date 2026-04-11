@@ -138,7 +138,7 @@ onMounted(async () => {
                 <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)]"></span>
               </div>
               <div>
-                <h3 class="text-sm font-extrabold uppercase tracking-widest bg-clip-text bg-gradient-to-r to-purple-400 drop-shadow-md">Christ AI</h3>
+                <h3 class="text-sm font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r to-purple-400 drop-shadow-md">Christ AI</h3>
                 <p class="text-[9px] text-cyan-500/80 tracking-[0.2em] font-mono">SYSTEM ONLINE</p>
               </div>
             </div>

@@ -96,7 +96,7 @@ onMounted(async () => {
             </div>
           </div>
 
-          <p class="text-2xl font-black text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text mb-4">
+          <p class="text-2xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text mb-4">
             {{ hotel.price }}
           </p>
 

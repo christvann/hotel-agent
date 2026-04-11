@@ -1,16 +1,16 @@
 require("dotenv").config();
 const axios = require("axios");
-const fs = require("fs"); // Tambahkan fs untuk membaca file lama
+const fs = require("fs");
 
 async function scrapeHotels() {
-  const DATA_FILE = "./automated_posts.json"; // Path ke database lokal
+  const DATA_FILE = "./automated_posts.json";
 
   try {
     const options = {
       method: "GET",
       url: `https://${process.env.RAPIDAPI_HOST}/api/v1/hotels/searchHotels`,
       params: {
-        dest_id: "-2092174",
+        dest_id: "-2092174", // Mumbai
         search_type: "CITY",
         arrival_date: "2026-05-01",
         departure_date: "2026-05-05",
@@ -31,12 +31,11 @@ async function scrapeHotels() {
     const rawHotels = response.data?.data?.hotels || [];
 
     if (rawHotels.length === 0) {
-      console.warn("⚠️ Scraper: API mengembalikan data kosong.");
-      return [];
+      throw new Error("API mengembalikan data kosong");
     }
 
-    // Mapping data
-    const hotels = rawHotels.map((hotel) => {
+    // Mapping data hasil scrape
+    const hotels = rawHotels.slice(0, 6).map((hotel) => {
       const p = hotel.property;
       return {
         name: p?.name || "Hotel Tanpa Nama",
@@ -47,15 +46,17 @@ async function scrapeHotels() {
       };
     });
 
-    console.log(`🏨 Scraper: Berhasil mengambil ${hotels.length} hotel.`);
-    return hotels.slice(0, 6);
+    console.log(`🏨 Scraper: Berhasil mengambil ${hotels.length} hotel segar.`);
+    return hotels;
   } catch (err) {
     console.error("❌ SCRAPER ERROR:", err.message);
 
-    // --- LOGIKA CADANGAN (PENTING SAAT ERROR 429) ---
+    // --- LOGIKA CADANGAN ---
     if (fs.existsSync(DATA_FILE)) {
-      console.log("🔄 Scraper: Menggunakan data terakhir dari database lokal agar sistem tetap jalan...");
+      console.log("🔄 Scraper: Menggunakan data cadangan dari database lokal...");
       const backupData = JSON.parse(fs.readFileSync(DATA_FILE));
+
+      // Mengembalikan data apa adanya agar server.js tidak bingung
       return backupData;
     }
 
